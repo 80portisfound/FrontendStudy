@@ -4,4 +4,10 @@ export interface Message {
   text: string;
   timestamp: Date;
   room: string;
+  type?: 'chat' | 'system';
+}
+
+export interface User {
+  id: string;
+  name: string;
 }

@@ -27,9 +27,15 @@ export default function MessageList({ messages, isLoading = false }: MessageList
       {messages.length === 0 && (
         <p className="text-gray-400 text-center mt-10">메시지가 없습니다.</p>
       )}
-      {messages.map((m) => (
-        <MessageItem key={m.id} message={m} isOwn={m.user === '나'} />
-      ))}
+      {messages.map((m) =>
+        m.type === 'system' ? (
+          <div key={m.id} className="text-center text-sm text-gray-500 py-2">
+            {m.text}
+          </div>
+        ) : (
+          <MessageItem key={m.id} message={m} isOwn={m.user === '나'} />
+        )
+      )}
       <div ref={bottomRef} />
     </div>
   )

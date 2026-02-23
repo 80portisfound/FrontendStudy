@@ -2,40 +2,34 @@ import { useState, useEffect } from 'react'
 import Sidebar from './Sidebar'
 import MessageList from './MessageList'
 import MessageInput from './MessageInput'
+import NicknameModal from './NicknameModal'
 import { useSocket } from '../hooks/useSocket'
 import type { Message } from '../types/message'
 
 const ROOMS = ['일반', '개발', '디자인', '자유']
 
 let nextId = 1
-function createMessage(room: string, user: string, text: string): Message {
+function createMessage(room: string, user: string, text: string, type: 'chat' | 'system' = 'chat'): Message {
   return {
     id: String(nextId++),
     user,
     text,
     timestamp: new Date(),
     room,
+    type,
   }
 }
 
-const INITIAL_MESSAGES: Message[] = [
-  createMessage('일반', '김철수', '안녕하세요! 반갑습니다.'),
-  createMessage('일반', '이영희', '오늘 날씨가 좋네요.'),
-  createMessage('일반', '박지민', '다들 점심 뭐 드셨어요?'),
-  createMessage('개발', '김철수', 'React 19 새 기능 확인해보셨나요?'),
-  createMessage('개발', '이영희', 'TypeScript 5.7 업데이트 정리해봤습니다.'),
-  createMessage('개발', '박지민', 'Tailwind v4 마이그레이션 진행 중입니다.'),
-  createMessage('디자인', '이영희', '새 랜딩페이지 시안 공유드립니다.'),
-  createMessage('디자인', '박지민', '컬러 팔레트 피드백 부탁드려요.'),
-  createMessage('자유', '김철수', '금요일에 번개 모임 어떠세요?'),
-  createMessage('자유', '이영희', '추천 맛집 있으면 알려주세요!'),
-]
+function createSystemMessage(text: string): Message {
+  return createMessage('', 'system', text, 'system')
+}
 
 export default function ChatRoom() {
   const [selectedRoom, setSelectedRoom] = useState('일반')
-  const [messages, setMessages] = useState<Message[]>(INITIAL_MESSAGES)
+  const [messages, setMessages] = useState<Message[]>([])
   const [isLoading, setIsLoading] = useState(false)
-  const { isConnected, sendMessage, incomingMessage } = useSocket()
+  const [nickname, setNickname] = useState<string | null>(null)
+  const { isConnected, sendMessage, incomingMessage, users, join, userJoined, userLeft } = useSocket()
 
   useEffect(() => {
     setIsLoading(true)
@@ -56,16 +50,42 @@ export default function ChatRoom() {
     }
   }, [incomingMessage])
 
-  const filtered = messages.filter((m) => m.room === selectedRoom)
+  // 사용자 입장 알림
+  useEffect(() => {
+    if (userJoined) {
+      setMessages((prev) => [...prev, createSystemMessage(`${userJoined}님이 입장했습니다`)])
+    }
+  }, [userJoined])
+
+  // 사용자 퇴장 알림
+  useEffect(() => {
+    if (userLeft) {
+      setMessages((prev) => [...prev, createSystemMessage(`${userLeft}님이 퇴장했습니다`)])
+    }
+  }, [userLeft])
+
+  const filtered = messages.filter((m) => m.room === selectedRoom || m.type === 'system')
 
   const handleSend = (text: string) => {
-    const newMessage = createMessage(selectedRoom, '나', text)
-    setMessages((prev) => [...prev, newMessage])
+    if (!nickname) return
+    const newMessage = createMessage(selectedRoom, nickname, text)
+    // 로컬 상태에 직접 추가하지 않고 서버로만 전송
+    // 서버에서 브로드캐스트된 메시지가 receiveMessage로 돌아옴
     sendMessage(newMessage)
   }
 
+  const handleJoin = (name: string) => {
+    setNickname(name)
+    join(name)
+  }
+
+  // 닉네임 미입력 시 모달 표시
+  if (!nickname) {
+    return <NicknameModal onSubmit={handleJoin} />
+  }
+
   return (
-    <div className="grid grid-cols-[15rem_1fr] grid-rows-[auto_1fr_auto] h-screen w-screen">
+    <div className="grid grid-cols-[15rem_1fr_12rem] grid-rows-[auto_1fr_auto] h-screen w-screen">
       {/* Sidebar — 왼쪽 전체 행 차지 */}
       <div className="row-span-3">
         <Sidebar
@@ -83,15 +103,35 @@ export default function ChatRoom() {
         </span>
       </header>
 
+      {/* User List Header */}
+      <div className="px-4 py-3 border-b border-l font-semibold bg-white">
+        접속자 ({users.length})
+      </div>
+
       {/* Message Area — 2행 (남은 공간 전부) */}
       <div className="overflow-y-auto bg-white">
         <MessageList messages={filtered} isLoading={isLoading} />
+      </div>
+
+      {/* User List */}
+      <div className="overflow-y-auto bg-gray-50 border-l p-2">
+        {users.map((user) => (
+          <div
+            key={user.id}
+            className={`px-2 py-1 rounded text-sm ${user.name === nickname ? 'font-bold text-blue-600' : ''}`}
+          >
+            {user.name === nickname ? `${user.name} (나)` : user.name}
+          </div>
+        ))}
       </div>
 
       {/* Input Area — 3행 */}
       <div className="bg-white">
         <MessageInput onSend={handleSend} />
       </div>
+
+      {/* Empty cell for grid alignment */}
+      <div className="bg-gray-50 border-l"></div>
     </div>
   )
 }
