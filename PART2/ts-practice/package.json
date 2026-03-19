@@ -1,0 +1,14 @@
+{
+  "name": "ts-practice",
+  "version": "1.0.0",
+  "scripts": {
+    "basic": "tsx 01-basic/types.ts",
+    "generics": "tsx 02-generics/generics.ts",
+    "advanced": "tsx 03-advanced/advanced.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  }
+}

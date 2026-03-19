@@ -1,0 +1,3 @@
+node_modules/
+
+# PART2에 ESLint 추가 시 루트 eslint.config.js의 ignores에 "ts-practice/**" 추가 필요
