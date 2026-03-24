@@ -6,7 +6,7 @@ type B = IsString<number>  // "no"
 
 const a: A = "yes"
 const b: B = "no"
-console.log("1. Conditional 타입:", a, b)
+console.log("1. Conditional 타입:", a, b) 
 
 // NonNullable: null/undefined 제거 (내장 conditional 타입)
 type MaybeString = string | null | undefined

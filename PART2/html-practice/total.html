@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>카운터 앱</title>
+  <style>
+    /* CSS 영역 */
+    .counter {
+      text-align: center;
+      padding: 50px;
+      font-family: Arial, sans-serif;
+    }
+
+    #count {
+      font-size: 4rem;
+      margin: 20px 0;
+      color: #333;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin: 5px;
+      font-size: 1rem;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      transition: transform 0.1s;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+    }
+
+    #increase { background: #28a745; color: white; }
+    #decrease { background: #dc3545; color: white; }
+    #reset { background: #6c757d; color: white; }
+  </style>
+</head>
+<body>
+
+  <!-- HTML 영역 -->
+  <div class="counter">
+    <h1 id="count">0</h1>
+    <button id="increase">증가</button>
+    <button id="decrease">감소</button>
+    <button id="reset">초기화</button>
+  </div>
+
+  <script>
+    /* JavaScript 영역 */
+    let count = 0;
+
+    const countEl = document.getElementById('count');
+    const increaseBtn = document.getElementById('increase');
+    const decreaseBtn = document.getElementById('decrease');
+    const resetBtn = document.getElementById('reset');
+
+    function updateDisplay() {
+      countEl.textContent = count;
+      
+      // 색상 변경 로직 수정
+      if (count > 0) {
+        countEl.style.color = 'green';
+      } else if (count < 0) {
+        countEl.style.color = 'red';
+      } else {
+        countEl.style.color = '#333';
+      }
+    }
+
+    increaseBtn.addEventListener('click', () => {
+      count++;
+      updateDisplay();
+    });
+
+    decreaseBtn.addEventListener('click', () => {
+      count--;
+      updateDisplay();
+    });
+
+    resetBtn.addEventListener('click', () => {
+      count = 0;
+      updateDisplay();
+    });
+  </script>
+</body>
+</html>

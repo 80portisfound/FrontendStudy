@@ -9,7 +9,7 @@ console.log("1. 제네릭 함수:", identity<string>("hello"), identity<number>(
 function firstItem<T>(arr: T[]): T | undefined {
   return arr[0]
 }
-
+  
 console.log("2. 제네릭 배열:", firstItem([1, 2, 3]), firstItem(["a", "b"]))
 
 // ===== 3. 제네릭 인터페이스 =====
