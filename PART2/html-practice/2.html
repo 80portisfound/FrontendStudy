@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flexbox 연습</title>
+    <style>
+        .container {
+            display: flex;
+            justify-content: center;  /* 가로 정렬 */
+            align-items: center;      /* 세로 정렬 */
+            gap: 20px;                /* 간격 */
+            
+            /* 확인을 위한 추가 스타일 */
+            min-height: 100vh;        /* 화면 전체 높이만큼 설정 */
+            padding: 0 20px;
+            background-color: #f4f4f9;
+        }
+
+        .item {
+            flex: 1;                  /* 모든 아이템이 동일한 비율로 너비를 가짐 */
+            
+            /* 확인을 위한 추가 스타일 */
+            padding: 30px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        /* 마우스 올렸을 때 효과 (선택사항) */
+        .item:hover {
+            transform: translateY(-10px);
+        }
+
+        /* 텍스트 스타일링 */
+        .item h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        .item p {
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 0;
+        }
+
+        /* 모바일 대응 (화면이 작아지면 세로로 나열) */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                padding: 50px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="item">
+            <div style="font-size: 40px; margin-bottom: 10px;">🎨</div>
+            <h3>디자인</h3>
+            <p>깔끔하고 현대적인 감각의 UI/UX 디자인을 제공합니다.</p>
+        </div>
+
+        <div class="item">
+            <div style="font-size: 40px; margin-bottom: 10px;">💻</div>
+            <h3>개발</h3>
+            <p>최신 기술 스택을 사용하여 견고한 시스템을 구축합니다.</p>
+        </div>
+
+        <div class="item">
+            <div style="font-size: 40px; margin-bottom: 10px;">📈</div>
+            <h3>마케팅</h3>
+            <p>데이터 분석을 기반으로 최적의 성장 전략을 제안합니다.</p>
+        </div>
+    </div>
+
+</body>
+</html>

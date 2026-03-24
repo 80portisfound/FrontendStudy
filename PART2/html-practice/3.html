@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>이벤트 리스너 테스트</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f2f5;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column; /* 세로로 나열 */
+            gap: 20px;
+            width: 400px;
+            padding: 30px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .section {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+        }
+
+        .section:last-child { border-bottom: none; }
+
+        label { display: block; margin-bottom: 8px; font-weight: bold; font-size: 14px; }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            cursor: pointer;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+        }
+
+        button:hover { background-color: #0056b3; }
+
+        #myButton { background-color: #28a745; }
+        #myButton:hover { background-color: #218838; }
+
+        .log-box {
+            background: #333;
+            color: #00ff00;
+            padding: 10px;
+            font-family: monospace;
+            font-size: 12px;
+            border-radius: 5px;
+            margin-top: 10px;
+            min-height: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- 1. 클릭 이벤트용 버튼 -->
+        <div class="section">
+            <label>1. 클릭 이벤트 테스트</label>
+            <button id="myButton">클릭하세요!</button>
+        </div>
+
+        <!-- 2. Input 이벤트용 입력창 -->
+        <div class="section">
+            <label>2. 실시간 입력 감지</label>
+            <input type="text" id="myInput" placeholder="여기에 타이핑 해보세요">
+            <div id="inputLog" class="log-box">콘솔을 확인하거나 여기에 출력됨</div>
+        </div>
+
+        <!-- 3. Form 제출용 섹션 -->
+        <div class="section">
+            <label>3. 폼 제출 (FormData)</label>
+            <form id="myForm">
+                <input type="text" name="userName" placeholder="이름" required>
+                <input type="email" name="userEmail" placeholder="이메일" required>
+                <button type="submit">데이터 제출</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // --- 제공해주신 자바스크립트 코드 ---
+
+        // 1. 클릭 이벤트
+        const button = document.querySelector('#myButton');
+        button.addEventListener('click', (event) => {
+          console.log('Clicked!');
+          alert('버튼이 클릭되었습니다!'); // 확인을 위한 알림창
+          event.preventDefault(); 
+        });
+
+        // 2. Input 이벤트
+        const input = document.querySelector('#myInput');
+        const inputLog = document.querySelector('#inputLog'); // 시각적 확인용
+
+        input.addEventListener('input', (e) => {
+          console.log('Current value:', e.target.value);
+          inputLog.textContent = `입력값: ${e.target.value}`; // 화면에 표시
+        });
+
+        // 3. Form 제출
+        const form = document.querySelector('#myForm');
+
+        form.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const formData = new FormData(form);
+          const data = Object.fromEntries(formData);
+          
+          console.log('제출된 데이터:', data);
+          alert('전송된 데이터: ' + JSON.stringify(data));
+        });
+    </script>
+</body>
+</html>
